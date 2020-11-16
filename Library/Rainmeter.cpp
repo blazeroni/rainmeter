@@ -626,12 +626,13 @@ LRESULT CALLBACK Rainmeter::MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 	case WM_COPYDATA:
 		{
 			COPYDATASTRUCT* cds = (COPYDATASTRUCT*)lParam;
-			if (cds && !GetRainmeter().IsInGameMode())  // Disallow any bangs while in "Game mode"
-			{
+			if (cds) {
 				const WCHAR* data = (const WCHAR*)cds->lpData;
-				if (cds->dwData == 1 && (cds->cbData > 0))
-				{
-					GetRainmeter().DelayedExecuteCommand(data);
+				if (GetRainmeter().AllowCommand(data)) {
+					if (cds->dwData == 1 && (cds->cbData > 0))
+					{
+						GetRainmeter().DelayedExecuteCommand(data);
+					}
 				}
 			}
 		}
@@ -1062,15 +1063,26 @@ void Rainmeter::ToggleSkinWithID(UINT id)
 	}
 }
 
+bool Rainmeter::AllowCommand(const WCHAR* command)
+{
+	return !m_GameMode || _wcsicmp(L"!DisableGameMode", command) == 0;
+}
+
 void Rainmeter::ToggleGameMode()
 {
 	if (m_GameMode)
 	{
-		ReloadSettings();
-		ActivateActiveSkins();
+		DisableGameMode();
 	}
 	else
 	{
+		EnableGameMode();
+	}
+}
+
+void Rainmeter::EnableGameMode()
+{
+	if (!m_GameMode) {
 		// Close dialogs if open
 		DialogManage::CloseDialog();
 		DialogAbout::CloseDialog();
@@ -1079,9 +1091,19 @@ void Rainmeter::ToggleGameMode()
 		DeleteAllUnmanagedSkins();
 		DeleteAllSkins();
 		DeleteAllUnmanagedSkins();  // Redelete unmanaged windows caused by OnCloseAction
+		m_GameMode = true;
 	}
-	m_GameMode = !m_GameMode;
 }
+
+void Rainmeter::DisableGameMode()
+{
+	if (m_GameMode) {
+		ReloadSettings();
+		ActivateActiveSkins();
+		m_GameMode = false;
+	}
+}
+
 
 void Rainmeter::SetSkinPath(const std::wstring& skinPath)
 {
