@@ -135,6 +135,8 @@ const BangInfo s_GroupBangs[] =
 // Bangs that are to be handled using a custom handler function.
 const CustomBangInfo s_CustomBangs[] =
 {
+	{ Bang::EnableGameMode, L"EnableGameMode", CommandHandler::DoEnableGameMode },
+	{ Bang::DisableGameMode, L"DisableGameMode", CommandHandler::DoDisableGameMode },
 	{ Bang::ActivateConfig, L"ActivateConfig", CommandHandler::DoActivateSkinBang },
 	{ Bang::DeactivateConfig, L"DeactivateConfig", CommandHandler::DoDeactivateSkinBang },
 	{ Bang::ToggleConfig, L"ToggleConfig", CommandHandler::DoToggleSkinBang },
@@ -618,6 +620,17 @@ std::vector<std::wstring> CommandHandler::ParseString(const WCHAR* str, ConfigPa
 
 	return result;
 }
+
+void CommandHandler::DoEnableGameMode(std::vector<std::wstring>& args, Skin* skin)
+{
+	GetRainmeter().EnableGameMode();
+}
+
+void CommandHandler::DoDisableGameMode(std::vector<std::wstring>& args, Skin* skin)
+{
+	GetRainmeter().DisableGameMode();
+}
+
 
 void CommandHandler::DoActivateSkinBang(std::vector<std::wstring>& args, Skin* skin)
 {

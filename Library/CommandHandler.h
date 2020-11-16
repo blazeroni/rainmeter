@@ -17,6 +17,8 @@ class Skin;
 
 enum class Bang
 {
+	EnableGameMode,
+	DisableGameMode,
 	Refresh,
 	RefreshApp,
 	Redraw,
@@ -134,6 +136,8 @@ public:
 
 	static std::vector<std::wstring> ParseString(const WCHAR* str, ConfigParser* parser = nullptr);
 
+	static void DoEnableGameMode(std::vector<std::wstring>& args, Skin* skin);
+	static void DoDisableGameMode(std::vector<std::wstring>& args, Skin* skin);
 	static void DoActivateSkinBang(std::vector<std::wstring>& args, Skin* skin);
 	static void DoDeactivateSkinBang(std::vector<std::wstring>& args, Skin* skin);
 	static void DoToggleSkinBang(std::vector<std::wstring>& args, Skin* skin);

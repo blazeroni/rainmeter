@@ -88,8 +88,11 @@ public:
 	void ToggleSkin(int folderIndex, int fileIndex);
 	void ToggleSkinWithID(UINT id);
 
+	bool AllowCommand(const WCHAR* command);
 	bool IsInGameMode() { return m_GameMode; }
 	void ToggleGameMode();
+	void EnableGameMode();
+	void DisableGameMode();
 
 	const std::wstring& GetPath() { return m_Path; }
 	const std::wstring& GetIniFile() { return m_IniFile; }
